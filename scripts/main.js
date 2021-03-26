@@ -39,8 +39,10 @@ applicationElement.addEventListener("click", event => {
 		//collect all the details into an object
 		const userObject = {
 			name: document.querySelector("input[name='registerName']").value,
-			email: document.querySelector("input[name='registerEmail']").value
+			email: document.querySelector("input[name='registerEmail']").value,
+			isAdmin: false
 		}
+		console.log(userObject)
 		registerUser(userObject)
 			.then(dbUserObj => {
 				sessionStorage.setItem("user", JSON.stringify(dbUserObj));
