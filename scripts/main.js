@@ -49,6 +49,7 @@ applicationElement.addEventListener("click", event => {
 	}
 })
 
+//logout event
 applicationElement.addEventListener("click", event => {
 	if (event.target.id === "logout") {
 		logoutUser();
@@ -78,12 +79,15 @@ applicationElement.addEventListener("click", event => {
 	}
 })
 
+//displaying details on the dom using the snack detail card
 const showDetails = (snackObj) => {
 	const listElement = document.querySelector("#mainContent");
 	listElement.innerHTML = SnackDetails(snackObj);
 }
+
 //end snack listeners
 
+//looks to sessionStorage to find a logged in user
 const checkForUser = () => {
 	if (sessionStorage.getItem("user")) {
 		setLoggedInUser(JSON.parse(sessionStorage.getItem("user")));
