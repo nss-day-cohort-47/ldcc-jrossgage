@@ -8,7 +8,7 @@ import { SnackDetails } from "./snacks/SnackDetails.js";
 import { Footer } from "./nav/Footer.js";
 import {
 	logoutUser, setLoggedInUser, loginUser, registerUser, getLoggedInUser,
-	getSnacks, getSingleSnack
+	getSnacks, getSingleSnack, getToppingDetails
 } from "./data/apiManager.js";
 
 
@@ -68,11 +68,15 @@ applicationElement.addEventListener("click", event => {
 	if (event.target.id.startsWith("detailscake")) {
 		const snackId = event.target.id.split("__")[1];
 		getSingleSnack(snackId)
-			.then(response => {
-				showDetails(response);
+			.then(snack => {
+				getToppingDetails(snackId)
+			    .then(toppingArr => {
+					showDetails(snack, toppingArr);
+				}) 	
 			})
 	}
 })
+
 
 applicationElement.addEventListener("click", event => {
 	event.preventDefault();
@@ -82,10 +86,11 @@ applicationElement.addEventListener("click", event => {
 })
 
 //displaying details on the dom using the snack detail card
-const showDetails = (snackObj) => {
+const showDetails = (snackObj, toppingArr) => {
 	const listElement = document.querySelector("#mainContent");
-	listElement.innerHTML = SnackDetails(snackObj);
+	listElement.innerHTML = SnackDetails(snackObj, toppingArr);
 }
+
 
 //end snack listeners
 
