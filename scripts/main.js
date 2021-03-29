@@ -2,13 +2,14 @@ console.log('yum, yum, yum');
 
 import { LoginForm } from "./auth/LoginForm.js";
 import { RegisterForm } from "./auth/RegisterForm.js";
-import { NavBar } from "./nav/NavBar.js";
+import { NavBar, listToppingsInDrop } from "./nav/NavBar.js";
+import { SnackCard } from "./snacks/SnackCard.js"
 import { SnackList } from "./snacks/SnackList.js";
 import { SnackDetails } from "./snacks/SnackDetails.js";
 import { Footer } from "./nav/Footer.js";
 import {
 	logoutUser, setLoggedInUser, loginUser, registerUser, getLoggedInUser,
-	getSnacks, getSingleSnack, getToppingDetails
+	getSnacks, getSingleSnack, getToppingDetails, getSnackByTopping, addType
 } from "./data/apiManager.js";
 
 
@@ -51,6 +52,19 @@ applicationElement.addEventListener("click", event => {
 	}
 })
 
+//add type event listener 
+applicationElement.addEventListener('click', event => {
+	event.preventDefault();
+	if (event.target.id === "typeButton") {
+		const typeObject = {
+			name: document.querySelector("input[name='registerType']").value
+		}
+		console.log(typeObject)
+		addType(typeObject)
+		showNavBar()
+	}
+})
+
 //logout event
 applicationElement.addEventListener("click", event => {
 	if (event.target.id === "logout") {
@@ -90,7 +104,26 @@ const showDetails = (snackObj, toppingArr) => {
 	const listElement = document.querySelector("#mainContent");
 	listElement.innerHTML = SnackDetails(snackObj, toppingArr);
 }
+//listening for change in the topping drop down
+applicationElement.addEventListener("change", event => {
+	if(event.target.id ==="toppingList") {
+		const toppingIndex = event.target.options.selectedIndex
+		renderSnackByTopping(toppingIndex)
+	}
+})
 
+const renderSnackByTopping = (toppingId) => {
+	   getSnackByTopping(toppingId)
+	    .then(arr => {
+			let filteredSnackHTML = ""
+			const listElement = document.querySelector("#filteredSnacks")
+			for (const eachObj of arr) {
+				filteredSnackHTML += SnackCard(eachObj.snack);
+				listElement.innerHTML = filteredSnackHTML
+			}
+		  console.log(arr)
+	  })
+}
 
 //end snack listeners
 
@@ -114,6 +147,7 @@ const showLoginRegister = () => {
 
 const showNavBar = () => {
 	applicationElement.innerHTML += NavBar();
+	
 }
 
 const showSnackList = () => {
@@ -133,6 +167,7 @@ const startLDSnacks = () => {
 	applicationElement.innerHTML += `<div id="mainContent"></div>`;
 	showSnackList();
 	showFooter();
+	listToppingsInDrop();
 
 }
 

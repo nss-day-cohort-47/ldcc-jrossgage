@@ -45,6 +45,17 @@ export const registerUser = (userObj) => {
 		})
 }
 
+export const addType = (typeObj) => {
+	return fetch(`${apiURL}/types`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(typeObj)
+	})
+		.then(response => response.json())
+}
+
 
 ///// snack functions
 
@@ -72,7 +83,20 @@ export const getSingleSnack = (snackId) => {
 	.then(response => response.json())
 }
 
+
+let toppingArray = []
+
 export const getToppingDetails = (snackId) => {
 	return fetch(`${apiURL}/snacktoppings?snackId=${snackId}&_expand=topping`)
+	.then(response => response.json())
+}
+
+export const getToppingsList = () => {
+	return fetch(`${apiURL}/toppings`)
+	.then(response => response.json())
+}
+
+export const getSnackByTopping = (toppingId) => {
+	return fetch(`${apiURL}/snacktoppings?toppingId=${toppingId}&_expand=snack`)
 	.then(response => response.json())
 }
