@@ -1,4 +1,4 @@
-import { getLoggedInUser } from "../data/apiManager.js"
+import { getLoggedInUser, getToppingsList } from "../data/apiManager.js"
 
 export const NavBar = () => {
 	//only show navItems and addTypeButton if user is logged in
@@ -13,11 +13,9 @@ export const NavBar = () => {
 			<button class="btn btn-info" type="button" id="allSnacks">All Snacks</button>
 		</li>
 		<li class="nav-item ms-1">
-			<select class="form-select form-select btn-info" aria-label="Select A Topping">
+			<select id="toppingList" class="form-select form-select btn-info" aria-label="Select A Topping">
 				<option selected>Select A Topping</option>
-				<option value="1">One</option>
-				<option value="2">Two</option>
-				<option value="3">Three</option>
+				
 			</select>
 		</li>
 		<li class="nav-item ms-1">
@@ -29,11 +27,13 @@ export const NavBar = () => {
 	const addTypeButton = getLoggedInUser().id ? `
 	<nav class="navbar navbar-light"">
 		<div class="container-fluid">
-			<button class="btn btn-outline-primary" type="button">Add A Type</button>
-		
+			<button id="typeButton" class="btn btn-outline-primary" type="button">Add A Type</button>
+			<input type="text"  id="registerType" name="registerType" placeholder="Insert New Type Here!">
 		</div>
 	</nav>` : ""
 
+	if (getLoggedInUser().admin === true) { 
+		console.log('You are doing great')
 	return `
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   		<div class="container-fluid">
@@ -44,5 +44,35 @@ export const NavBar = () => {
   		</div>
 	</nav>
 	${addTypeButton}
+	`} else {
+		return  `
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+			  <div class="container-fluid">
+			  <span class="navbar-brand mb-0 h1">LDCC
+				  <span class="navbar-text">Little Debbie Collector Club</span>
+			  </span>
+			${navItems}
+			  </div>
+		</nav>`
+	}
+}
+
+
+const toppingDropList = (toppingObj) => {
+	return `
+	<option value="${toppingObj.id}">${toppingObj.name}</option>
 	`
+}
+
+export const listToppingsInDrop = () => {
+	const DomLocation = document.querySelector("#toppingList")
+	let toppingListHTML = ""
+	getToppingsList()
+		.then(arr => {
+			for(const toppingObj of arr) {
+				console.log(toppingObj)
+				toppingListHTML += toppingDropList(toppingObj)
+			}
+			DomLocation.innerHTML += toppingListHTML
+		})
 }
